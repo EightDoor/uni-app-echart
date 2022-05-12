@@ -4,20 +4,20 @@
   </view>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { log } from "@/utils/log";
-import { IEChartOption } from "../models";
 
 const echarts = require("../wxcomponents/ec-canvas/echarts");
 
 const props = defineProps<{
   height: string;
-  options: IEChartOption;
+  options: any;
 }>();
 
 const ecoptions = ref<any>({
   onInit: echartBarInit,
 });
+const charInfo = ref();
 
 function echartBarInit(
   canvas: any,
@@ -33,11 +33,18 @@ function echartBarInit(
     devicePixelRatio: dpr, // 像素
   });
   log.d(props.options, "props.options");
-
   chart.setOption(props.options ?? {});
   canvas.setChart(chart);
+  charInfo.value = chart;
   return chart;
 }
+
+watch(props.options, (newVal)=>{
+  charInfo.value.setOption(newVal)
+}, {
+  deep: true,
+  immediate: true
+})
 </script>
 <style scoped lang="scss">
 .container {

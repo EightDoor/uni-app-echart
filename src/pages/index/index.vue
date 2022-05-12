@@ -4,14 +4,14 @@
   </view>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import CommChart from "@/components/Chart.vue";
 
 const chartHeight = ref({
   one: "300px",
 });
 const chartOptions = ref<{
-  one: IEChartOption;
+  one: any;
 }>({
   one: {
     tooltip: {
@@ -57,5 +57,17 @@ const chartOptions = ref<{
     ],
   },
 });
+
+function initData() {
+  setInterval(()=>{
+    console.log("执行了1000")
+    const value = Math.floor(Math.random() * 100)
+    chartOptions.value.one.series[0].data = [{ value, name: "Search Engine -> " + value }];
+  }, 2000)
+}
+
+onMounted(()=>{
+  initData()
+})
 </script>
 <style scoped lang="scss"></style>
